@@ -8,6 +8,7 @@ from uc3m_care import JSON_FILES_RF2_PATH
 from uc3m_care.storage.vaccination_json_store import VaccinationJsonStore
 from uc3m_care.storage.appointments_json_store import AppointmentsJsonStore
 from uc3m_care.storage.patients_json_store import PatientsJsonStore
+date_param_ok = "2023-01-01"
 
 class TestVaccinePatient(TestCase):
     """Class for testing vaccine patient"""
@@ -26,25 +27,25 @@ class TestVaccinePatient(TestCase):
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima", "Regular",
                                           "+34123456789", "6")
-        my_manager.get_vaccine_date(file_test)
+        my_manager.get_vaccine_date(file_test, date_param_ok)
 
         my_manager.request_vaccination_id("57c811e5-3f5a-4a89-bbb8-11c0464d53e6",
                                           "minombre tieneuncharmenosqmax", "Family",
                                           "+34333456789","7")
         file_test = JSON_FILES_RF2_PATH + "test_ok_2.json"
 
-        my_manager.get_vaccine_date(file_test)
+        my_manager.get_vaccine_date(file_test, date_param_ok)
 
     @freeze_time("2022-03-18")
     def test_vaccine_patient_ok(self):
         """basic path , signature is found , and date = today"""
         my_manager = VaccineManager()
         value = my_manager.vaccine_patient\
-                ("5a06c7bede3d584e934e2f5bd3861e625cb31937f9f1a5362a51fbbf38486f1c")
+                ("11c5eb477fd2add91b8c64f47bd30dfa7c0653838ab3f5a3f040913c41f66af0")
         self.assertTrue(value)
         vaccination_log = VaccinationJsonStore()
         vaccination_entry = vaccination_log.find_item\
-            ("5a06c7bede3d584e934e2f5bd3861e625cb31937f9f1a5362a51fbbf38486f1c")
+            ("11c5eb477fd2add91b8c64f47bd30dfa7c0653838ab3f5a3f040913c41f66af0")
         self.assertIsNotNone(vaccination_entry)
 
 
