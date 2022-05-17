@@ -65,8 +65,8 @@ class TestGetVaccineDate(TestCase):
                                           "minombre tienelalongitudmaxima",
                                           "Regular","+34123456789","6")
     #check the method
-        value = my_manager.get_vaccine_date(file_test)
-        self.assertEqual(value, "5a06c7bede3d584e934e2f5bd3861e625cb31937f9f1a5362a51fbbf38486f1c")
+        value = my_manager.get_vaccine_date(file_test, date_param_ok)
+        self.assertEqual(value, "11c5eb477fd2add91b8c64f47bd30dfa7c0653838ab3f5a3f040913c41f66af0")
     #check store_date
         self.assertIsNotNone(file_store_date.find_item(value))
 
@@ -90,7 +90,7 @@ class TestGetVaccineDate(TestCase):
 
                 # check the method
                 with self.assertRaises(VaccineManagementException) as c_m:
-                    my_manager.get_vaccine_date(file_test)
+                    my_manager.get_vaccine_date(file_test, date_param_ok)
                 self.assertEqual(c_m.exception.message, expected_value)
 
                 # read the file again to compare
@@ -111,7 +111,7 @@ class TestGetVaccineDate(TestCase):
 
         #check the method
         with self.assertRaises(VaccineManagementException) as c_m:
-            my_manager.get_vaccine_date(file_test)
+            my_manager.get_vaccine_date(file_test, date_param_ok)
         self.assertEqual(c_m.exception.message, "patient system id is not valid")
 
         # read the file again to campare
@@ -131,7 +131,7 @@ class TestGetVaccineDate(TestCase):
 
     #check the method
         with self.assertRaises(VaccineManagementException) as c_m:
-            my_manager.get_vaccine_date(file_test)
+            my_manager.get_vaccine_date(file_test, date_param_ok)
         self.assertEqual(c_m.exception.message, "JSON Decode Error - Wrong JSON Format")
 
     #read the file again to campare
@@ -169,7 +169,7 @@ class TestGetVaccineDate(TestCase):
 
         exception_message = "Exception not raised"
         try:
-            my_manager.get_vaccine_date(file_test)
+            my_manager.get_vaccine_date(file_test, date_param_ok)
         #pylint: disable=broad-except
         except Exception as exception_raised:
             exception_message = exception_raised.__str__()
