@@ -2,6 +2,7 @@
 from datetime import datetime
 import hashlib
 from freezegun import freeze_time
+from datetime import datetime
 from uc3m_care.data.attribute.attribute_phone_number import PhoneNumber
 from uc3m_care.data.attribute.attribute_patient_system_id import PatientSystemId
 from uc3m_care.data.attribute.attribute_date_signature import DateSignature
@@ -15,7 +16,7 @@ from uc3m_care.parser.appointment_json_parser import AppointmentJsonParser
 class VaccinationAppointment():
     """Class representing an appointment  for the vaccination of a patient"""
 
-    def __init__( self, patient_sys_id, patient_phone_number, days ):
+    def __init__( self, patient_sys_id, patient_phone_number, date_iso_format):
         self.__alg = "SHA-256"
         self.__type = "DS"
         self.__patient_sys_id = PatientSystemId(patient_sys_id).value
@@ -25,12 +26,9 @@ class VaccinationAppointment():
         self.__phone_number = PhoneNumber(patient_phone_number).value
         justnow = datetime.utcnow()
         self.__issued_at = datetime.timestamp(justnow)
-        if days == 0:
-            self.__appointment_date = 0
-        else:
-            #timestamp is represneted in seconds.microseconds
-            #age must be expressed in senconds to be added to the timestap
-            self.__appointment_date = self.__issued_at + (days * 24 * 60 * 60)
+
+        self.__appointment_date = self.validate_date(date_iso_format)
+
         self.__date_signature = self.vaccination_signature
 
 
@@ -113,13 +111,13 @@ class VaccinationAppointment():
         return appointment
 
     @classmethod
-    def create_appointment_from_json_file( cls, json_file ):
+    def create_appointment_from_json_file( cls, json_file, date_iso_format):
         """returns the vaccination appointment for the received input json file"""
         appointment_parser = AppointmentJsonParser(json_file)
         new_appointment = cls(
             appointment_parser.json_content[appointment_parser.PATIENT_SYSTEM_ID_KEY],
             appointment_parser.json_content[appointment_parser.CONTACT_PHONE_NUMBER_KEY],
-            10)
+            date_iso_format)
         return new_appointment
 
     def is_valid_today( self ):
@@ -136,3 +134,11 @@ class VaccinationAppointment():
             vaccination_log_entry = VaccinationLog(self.date_signature)
             vaccination_log_entry.save_log_entry()
         return True
+    @staticmethod
+    def validate_date(date_iso_format):
+        try:
+            date = datetime.fromisoformat(date_iso_format)
+        except:
+            raise VaccineManagementException("Formato incorrecto de fecha")
+        if date <= datetime.utcnow():
+            raise VaccineManagementException("Fecha anterior a la actual")

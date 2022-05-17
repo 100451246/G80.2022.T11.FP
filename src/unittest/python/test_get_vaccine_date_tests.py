@@ -42,6 +42,10 @@ param_list_nok = [("test_dup_all.json","JSON Decode Error - Wrong JSON Format"),
                     ("test_no_phone.json", "phone number is not valid")
                     ]
 
+date_param_ok = "2023-01-01"
+date_param_list_nok = [("2002-01-01", "Fecha anterior a la actual"),
+                       ("132-245", "Formato incorrecto de fecha")]
+
 class TestGetVaccineDate(TestCase):
     """Class for testing get_vaccine_date"""
     @freeze_time("2022-03-08")
@@ -182,3 +186,16 @@ class TestGetVaccineDate(TestCase):
 
         self.assertEqual(exception_message, "Patient's data have been manipulated")
         self.assertEqual(hash_new, hash_original)
+
+    def test_get_vaccine_date_nok_date(self):
+        file_test = JSON_FILES_RF2_PATH + "test_ok.json"
+        my_manager = VaccineManager()
+
+        # read the file to compare file content before and after method call
+
+        #check the method
+        for date, mssg in date_param_list_nok:
+            with self.assertRaises(VaccineManagementException) as c_m:
+                my_manager.get_vaccine_date(file_test, date)
+            self.assertEqual(c_m.exception.message, mssg)
+
