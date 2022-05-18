@@ -8,7 +8,7 @@ from uc3m_care import JSON_FILES_RF2_PATH
 from uc3m_care.storage.vaccination_json_store import VaccinationJsonStore
 from uc3m_care.storage.appointments_json_store import AppointmentsJsonStore
 from uc3m_care.storage.patients_json_store import PatientsJsonStore
-date_param_ok = "2023-01-01"
+date_param_ok = "2022-03-18"
 
 class TestVaccinePatient(TestCase):
     """Class for testing vaccine patient"""
@@ -41,11 +41,11 @@ class TestVaccinePatient(TestCase):
         """basic path , signature is found , and date = today"""
         my_manager = VaccineManager()
         value = my_manager.vaccine_patient\
-                ("11c5eb477fd2add91b8c64f47bd30dfa7c0653838ab3f5a3f040913c41f66af0")
+                ("62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
         self.assertTrue(value)
         vaccination_log = VaccinationJsonStore()
         vaccination_entry = vaccination_log.find_item\
-            ("11c5eb477fd2add91b8c64f47bd30dfa7c0653838ab3f5a3f040913c41f66af0")
+            ("62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
         self.assertIsNotNone(vaccination_entry)
 
 
@@ -62,7 +62,7 @@ class TestVaccinePatient(TestCase):
 
         with self.assertRaises(VaccineManagementException) as context_manager:
             my_manager.vaccine_patient(
-                "5a06c7bede3d584e934e2f5bd3861e625cb31937f9f1a5362a51fbbf38486f1c")
+                "b1a1011d029091f4bae8c0691ee4974570e4dfb9e29088970836c35f29bebc87")
         self.assertEqual(context_manager.exception.message, "Today is not the date")
         # read the file again to compare
         hash_new = file_store_vaccine.data_hash()
