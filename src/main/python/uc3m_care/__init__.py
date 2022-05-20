@@ -11,3 +11,5 @@ from uc3m_care.storage.appointments_json_store import AppointmentsJsonStore
 from uc3m_care.storage.vaccination_json_store import VaccinationJsonStore
 from uc3m_care.storage.temp_cancellations_json_store import TempCancellationsJsonStore
 from uc3m_care.storage.final_cancellations_json_store import FinalCancellationsJsonStore
+from uc3m_care.storage.temp_cancellations_json_store import TempCancellationsJsonStore
+from uc3m_care.storage.final_cancellations_json_store import FinalCancellationsJsonStore
