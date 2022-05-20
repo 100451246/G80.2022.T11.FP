@@ -3,7 +3,7 @@ from uc3m_care.exception.vaccine_management_exception import VaccineManagementEx
 
 
 # pylint: disable=too-few-public-methods
-class CancellationType(Attribute):
+class Reason(Attribute):
     """Classs for the attribute PhoneNumber"""
     _validation_error_message = "Reason is not valid"
 

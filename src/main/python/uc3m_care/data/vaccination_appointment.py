@@ -41,6 +41,16 @@ class VaccinationAppointment():
                ",vaccinationtiondate:" + self.__appointment_date.__str__() + "}"
 
     @property
+    def alg(self):
+        """Property that represents the guid of the patient"""
+        return self.__alg
+
+    @property
+    def type(self):
+        """Property that represents the guid of the patient"""
+        return self.__type
+
+    @property
     def patient_id(self):
         """Property that represents the guid of the patient"""
         return self.__patient_id

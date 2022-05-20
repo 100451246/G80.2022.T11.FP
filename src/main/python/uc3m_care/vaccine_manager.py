@@ -1,4 +1,5 @@
 """Module """
+from uc3m_care.data.appointment_cancellation import AppointmentCancellation
 from uc3m_care.data.vaccine_patient_register import VaccinePatientRegister
 from uc3m_care.data.vaccination_appointment import VaccinationAppointment
 from uc3m_care.parser.json_parser import JsonParser
@@ -43,16 +44,17 @@ class VaccineManager:
             return appointment.register_vaccination()
 
         def cancel_appointment(self, input_file):
-            parser = JsonParser(input_file)
+            my_cancellation = AppointmentCancellation(input_file)
+            my_cancellation.save_cancellation()
+            my_cancellation.delete_appointment()
+            """parser = JsonParser(input_file)
             info = parser.json_content
             date_signature = info["date_signature"]
             cancellation_type = info["cancellation_type"]
             reason = info["reason"]
             appointment = VaccinationAppointment.get_appointment_from_date_signature(date_signature)
-            appointment.delete_appointment(cancellation_type)
-
-
-            return date_signature
+            appointment.delete_appointment(cancellation_type)"""
+            return my_cancellation.appointment.date_signature
 
     instance = None
 
