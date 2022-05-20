@@ -39,6 +39,17 @@ class JsonStore():
         self._data_list.append(item.__dict__)
         self.save()
 
+    def delete_item(self, item):
+        self.load()
+
+        for i in range(len(self._data_list)):
+            if self._data_list[i]["_VaccinationAppointment__date_signature"] == item.date_signature:
+                self._data_list.pop(i)
+        self.save()
+
+
+
+
     def find_item( self, key_value, key=None):
         """Finds the first item with the key_value in the datalist"""
         self.load()

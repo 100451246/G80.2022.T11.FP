@@ -3,6 +3,8 @@ from datetime import datetime
 import hashlib
 from freezegun import freeze_time
 from datetime import datetime
+
+
 from uc3m_care.data.attribute.attribute_phone_number import PhoneNumber
 from uc3m_care.data.attribute.attribute_patient_system_id import PatientSystemId
 from uc3m_care.data.attribute.attribute_date_signature import DateSignature
@@ -11,6 +13,8 @@ from uc3m_care.data.vaccine_patient_register import VaccinePatientRegister
 from uc3m_care.exception.vaccine_management_exception import VaccineManagementException
 from uc3m_care.storage.appointments_json_store import AppointmentsJsonStore
 from uc3m_care.parser.appointment_json_parser import AppointmentJsonParser
+from uc3m_care.storage.temp_cancellations_json_store import TempCancellationsJsonStore
+from uc3m_care.storage.final_cancellations_json_store import FinalCancellationsJsonStore
 
 FECHA_ACTUAL = "2022-03-08"
 # pylint: disable=too-many-instance-attributes
@@ -27,9 +31,7 @@ class VaccinationAppointment():
         self.__phone_number = PhoneNumber(patient_phone_number).value
         justnow = datetime.utcnow()
         self.__issued_at = datetime.timestamp(justnow)
-
         self.__appointment_date = self.validate_date(date_iso_format)
-
         self.__date_signature = self.vaccination_signature
 
     def __signature_string(self):
@@ -120,6 +122,8 @@ class VaccinationAppointment():
             date_iso_format)
         return new_appointment
 
+
+
     def is_valid_today(self):
         """returns true if today is the appointment's date"""
         date = self.appointment_date
@@ -144,3 +148,14 @@ class VaccinationAppointment():
         if date <= datetime.fromisoformat(FECHA_ACTUAL):
             raise VaccineManagementException("Fecha anterior a la actual")
         return date_iso_format
+
+    def delete_appointment(self, cancellation_type):
+        my_store = AppointmentsJsonStore()
+        my_store.delete_item(self)
+        if cancellation_type == "Temporal":
+            my_store = TempCancellationsJsonStore()
+            my_store.add_item(self)
+
+        if cancellation_type == "Final":
+            my_store = FinalCancellationsJsonStore()
+            my_store.add_item(self)

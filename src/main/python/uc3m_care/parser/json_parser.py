@@ -31,6 +31,7 @@ class JsonParser():
             raise VaccineManagementException("JSON Decode Error - Wrong JSON Format") from ex
         self._json_content = data
 
+
     @property
     def json_content( self ):
         """returns a dictionary with the content of the json file"""
