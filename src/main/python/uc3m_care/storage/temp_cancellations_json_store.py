@@ -20,11 +20,6 @@ class TempCancellationsJsonStore():
                 raise VaccineManagementException(self.ERROR_INVALID_APPOINTMENT_OBJECT)
             super().add_item(item)
 
-        def delete_item(self, item):
-            from uc3m_care.data.vaccination_appointment import VaccinationAppointment
-            if not isinstance(item, VaccinationAppointment):
-                raise VaccineManagementException(self.ERROR_INVALID_APPOINTMENT_OBJECT)
-            super().delete_item(item)
 
     instance = None
 

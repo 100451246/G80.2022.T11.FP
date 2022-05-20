@@ -47,13 +47,6 @@ class VaccineManager:
             my_cancellation = AppointmentCancellation(input_file)
             my_cancellation.save_cancellation()
             my_cancellation.delete_appointment()
-            """parser = JsonParser(input_file)
-            info = parser.json_content
-            date_signature = info["date_signature"]
-            cancellation_type = info["cancellation_type"]
-            reason = info["reason"]
-            appointment = VaccinationAppointment.get_appointment_from_date_signature(date_signature)
-            appointment.delete_appointment(cancellation_type)"""
             return my_cancellation.appointment.date_signature
 
     instance = None
