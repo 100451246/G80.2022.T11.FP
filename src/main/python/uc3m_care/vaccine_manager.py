@@ -45,9 +45,10 @@ class VaccineManager:
 
         def cancel_appointment(self, input_file):
             my_cancellation = AppointmentCancellation(input_file)
+            date_signature = my_cancellation.get_appointment_from_json(input_file).date_signature
             my_cancellation.save_cancellation()
-            my_cancellation.delete_appointment()
-            return my_cancellation.appointment.date_signature
+            my_cancellation.delete_appointment(input_file)
+            return date_signature
 
     instance = None
 

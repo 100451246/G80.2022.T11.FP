@@ -25,7 +25,7 @@ class AppointmentCancellation():
     """Class representing an appointment  for the vaccination of a patient"""
 
     def __init__(self, input_file):
-        self.__appointment = self.get_appointment_from_json(input_file)
+        self.__date_signature = self.get_appointment_from_json(input_file).date_signature
         self.__cancellation_type = self.get_cancellation_type(input_file)
         self.__reason = self.get_reason(input_file)
 
@@ -57,11 +57,12 @@ class AppointmentCancellation():
             cancellations_store = TempCancellationsJsonStore()
         else:
             cancellations_store = FinalCancellationsJsonStore()
-        cancellations_store.add_item(self.__appointment)
+        cancellations_store.add_item(self)
 
-    def delete_appointment(self):
+    def delete_appointment(self, input_file):
+        appointment = self.get_appointment_from_json(input_file)
         my_store = AppointmentsJsonStore()
-        my_store.delete_item(self.__appointment)
+        my_store.delete_item(appointment)
 
 
     @staticmethod
