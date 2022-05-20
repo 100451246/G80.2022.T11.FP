@@ -21,7 +21,7 @@ class TestVaccinePatient(TestCase):
 
         file_store_date.delete_json_file()
         file_store_patient.delete_json_file()
-        file_test = JSON_FILES_RF2_PATH + "test_ok.json"
+        file_test = JSON_FILES_RF2_PATH + "test_temporal_ok.json"
         #add patient and date in the store
         my_manager = VaccineManager()
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",

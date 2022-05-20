@@ -51,7 +51,7 @@ class TestGetVaccineDate(TestCase):
     @freeze_time("2022-03-08")
     def test_get_vaccine_date_ok(self):
         """test ok"""
-        file_test = JSON_FILES_RF2_PATH + "test_ok.json"
+        file_test = JSON_FILES_RF2_PATH + "test_temporal_ok.json"
         my_manager = VaccineManager()
 
     #first , prepare my test , remove store patient
@@ -143,7 +143,7 @@ class TestGetVaccineDate(TestCase):
     @freeze_time("2022-03-08")
     def test_get_vaccine_date_no_ok_data_manipulated( self ):
         """ no quotes , not valid """
-        file_test = JSON_FILES_RF2_PATH + "test_ok.json"
+        file_test = JSON_FILES_RF2_PATH + "test_temporal_ok.json"
         my_manager = VaccineManager()
         file_store = JSON_FILES_PATH + "store_patient.json"
         file_store_date = JSON_FILES_PATH + "store_date.json"
@@ -189,7 +189,7 @@ class TestGetVaccineDate(TestCase):
 
     @freeze_time("2002-01-01")
     def test_get_vaccine_date_nok_date(self):
-        file_test = JSON_FILES_RF2_PATH + "test_ok.json"
+        file_test = JSON_FILES_RF2_PATH + "test_temporal_ok.json"
         my_manager = VaccineManager()
 
         # read the file to compare file content before and after method call
