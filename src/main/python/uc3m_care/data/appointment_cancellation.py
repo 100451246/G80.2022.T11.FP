@@ -31,19 +31,8 @@ class AppointmentCancellation():
         self.__cancellation_type = self.get_cancellation_type(input_file)
         self.__reason = self.get_reason(input_file)
 
-    def __signature_string(self):
-        """Composes the string to be used for generating the key for the date"""
-        return "{alg:" + self.__appointment.alg + ",typ:" + \
-               self.__appointment.type + ",patient_sys_id:" + \
-               self.__appointment.patient_sys_id + ",issuedate:" + \
-               self.__appointment.issued_at.__str__() + \
-               ",vaccinationtiondate:" + self.__appointment.appointment_date.__str__() + \
-               ",reason:" + self.__reason + "}"
 
-    @property
-    def appointment(self):
-        """Property that represents the guid of the patient"""
-        return self.__appointment
+
 
     @property
     def cancellation_type(self):
