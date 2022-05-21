@@ -2,7 +2,7 @@ from unittest import TestCase
 import os
 import shutil
 from freezegun import freeze_time
-from uc3m_care import VaccineManager, FinalCancellationsJsonStore
+from uc3m_care import VaccineManager, FinalCancellationsJsonStore, VaccinationJsonStore
 from uc3m_care import VaccineManagementException
 from uc3m_care import JSON_FILES_PATH, JSON_FILES_RF2_PATH
 from uc3m_care import AppointmentsJsonStore
@@ -26,8 +26,12 @@ class TestCancelAppointment(TestCase):
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
         file_store_date.delete_json_file()
-        file_store_cancellations = TempCancellationsJsonStore()
-        file_store_cancellations.delete_json_file()
+        file_store_temp_cancellations = TempCancellationsJsonStore()
+        file_store_temp_cancellations.delete_json_file()
+        file_store_final_cancellations = FinalCancellationsJsonStore()
+        file_store_final_cancellations.delete_json_file()
+        file_store_vaccines = VaccinationJsonStore()
+        file_store_vaccines.delete_json_file()
 
     # add a patient in the store
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
@@ -39,7 +43,7 @@ class TestCancelAppointment(TestCase):
         self.assertEqual(value, "62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
     #check store_date
         self.assertIsNone(file_store_date.find_item(value))
-        self.assertIsNotNone(file_store_cancellations.find_item(value))
+        self.assertIsNotNone(file_store_temp_cancellations.find_item(value))
 
     @freeze_time("2022-03-08")
     def test_cancel_appointment_final_ok(self):
@@ -53,8 +57,12 @@ class TestCancelAppointment(TestCase):
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
         file_store_date.delete_json_file()
-        file_store_cancellations = FinalCancellationsJsonStore()
-        file_store_cancellations.delete_json_file()
+        file_store_final_cancellations = FinalCancellationsJsonStore()
+        file_store_final_cancellations.delete_json_file()
+        file_store_temp_cancellations = TempCancellationsJsonStore()
+        file_store_temp_cancellations.delete_json_file()
+        file_store_vaccines = VaccinationJsonStore()
+        file_store_vaccines.delete_json_file()
 
     # add a patient in the store
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
@@ -66,4 +74,4 @@ class TestCancelAppointment(TestCase):
         self.assertEqual(value, "62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
     #check store_date
         self.assertIsNone(file_store_date.find_item(value))
-        self.assertIsNotNone(file_store_cancellations.find_item(value))
+        self.assertIsNotNone(file_store_final_cancellations.find_item(value))

@@ -1,5 +1,6 @@
 [
   {
+    "_AppointmentCancellation__appointment_date": "2022-03-18",
     "_AppointmentCancellation__date_signature": "62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6",
     "_AppointmentCancellation__cancellation_type": "Temporal",
     "_AppointmentCancellation__reason": "Gool"
