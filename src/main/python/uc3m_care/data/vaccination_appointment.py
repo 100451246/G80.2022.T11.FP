@@ -41,6 +41,16 @@ class VaccinationAppointment():
                ",vaccinationtiondate:" + self.__appointment_date.__str__() + "}"
 
     @property
+    def alg(self):
+        """Property that represents the guid of the patient"""
+        return self.__alg
+
+    @property
+    def type(self):
+        """Property that represents the guid of the patient"""
+        return self.__type
+
+    @property
     def patient_id(self):
         """Property that represents the guid of the patient"""
         return self.__patient_id
@@ -149,13 +159,5 @@ class VaccinationAppointment():
             raise VaccineManagementException("Fecha anterior a la actual")
         return date_iso_format
 
-    def delete_appointment(self, cancellation_type):
-        my_store = AppointmentsJsonStore()
-        my_store.delete_item(self)
-        if cancellation_type == "Temporal":
-            my_store = TempCancellationsJsonStore()
-            my_store.add_item(self)
 
-        if cancellation_type == "Final":
-            my_store = FinalCancellationsJsonStore()
-            my_store.add_item(self)
+
