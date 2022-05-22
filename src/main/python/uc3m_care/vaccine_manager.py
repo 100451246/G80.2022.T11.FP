@@ -1,7 +1,4 @@
 """Module """
-from datetime import datetime
-
-
 from uc3m_care.data.appointment_cancellation import AppointmentCancellation
 from uc3m_care.data.vaccine_patient_register import VaccinePatientRegister
 from uc3m_care.data.vaccination_appointment import VaccinationAppointment
@@ -52,7 +49,6 @@ class VaccineManager:
             my_cancellation.save_cancellation()
             my_cancellation.delete_appointment(input_file)
             return date_signature
-
 
     instance = None
 

@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from datetime import datetime
 
 from uc3m_care.data.vaccination_appointment import VaccinationAppointment
-from uc3m_care.storage.vaccination_json_store import VaccinationJsonStore
+from uc3m_care.storage.vaccination_json_store import  VaccinationJsonStore
 from uc3m_care.data.attribute.attribute_cancellation_type import CancellationType
 from uc3m_care.data.attribute.attribute_phone_number import PhoneNumber
 from uc3m_care.data.attribute.attribute_patient_system_id import PatientSystemId
@@ -18,17 +18,21 @@ from uc3m_care.parser.appointment_json_parser import AppointmentJsonParser
 from uc3m_care.storage.temp_cancellations_json_store import TempCancellationsJsonStore
 from uc3m_care.storage.final_cancellations_json_store import FinalCancellationsJsonStore
 
+FECHA_ACTUAL = "2022-03-08"
+
 
 # pylint: disable=too-many-instance-attributes
 class AppointmentCancellation():
     """Class representing an appointment  for the vaccination of a patient"""
 
     def __init__(self, input_file):
-        self.appointment_already_cancelled(self.get_date_signature(input_file))
         self.__appointment_date = self.get_appointment_from_json(input_file).appointment_date
         self.__date_signature = self.get_appointment_from_json(input_file).date_signature
         self.__cancellation_type = self.get_cancellation_type(input_file)
         self.__reason = self.get_reason(input_file)
+
+
+
 
     @property
     def cancellation_type(self):
@@ -41,6 +45,7 @@ class AppointmentCancellation():
     def save_cancellation(self):
         """saves the appointment in the appointments store"""
         self.date_has_passed()
+        self.appointment_already_cancelled()
         self.vaccine_is_done()
         if self.__cancellation_type == "Temporal":
             cancellations_store = TempCancellationsJsonStore()
@@ -55,15 +60,15 @@ class AppointmentCancellation():
 
     def date_has_passed(self):
         date = datetime.fromisoformat(self.__appointment_date)
-        if date < datetime.fromisoformat(str(datetime.today().date())):
+        if date < datetime.fromisoformat(FECHA_ACTUAL):
             raise VaccineManagementException("Cita antigua")
 
-    def appointment_already_cancelled(self, date_signature):
+    def appointment_already_cancelled(self):
         my_temp_store = TempCancellationsJsonStore()
         my_final_store = FinalCancellationsJsonStore()
-        if my_final_store.find_item(date_signature) is not None:
+        if my_final_store.find_item(self.__date_signature) is not None:
             raise VaccineManagementException("Cita ya cancelada")
-        if my_temp_store.find_item(date_signature) is not None:
+        if my_temp_store.find_item(self.__date_signature) is not None:
             raise VaccineManagementException("Cita ya cancelada")
 
     def vaccine_is_done(self):
@@ -71,11 +76,13 @@ class AppointmentCancellation():
         if my_store.find_item(self.__date_signature) is not None:
             raise VaccineManagementException("Vacuna ya administrada")
 
-    def get_appointment_from_json(self, input_file):
-        date_signature = self.get_date_signature(input_file)
+    @staticmethod
+    def get_appointment_from_json(input_file):
+        my_parser = CancellationsJsonParser(input_file)
+        info = my_parser.json_content
+        date_signature = info["date_signature"]
         appointment = VaccinationAppointment.get_appointment_from_date_signature(date_signature)
         return appointment
-
     @staticmethod
     def get_cancellation_type(input_file):
         my_parser = CancellationsJsonParser(input_file)
@@ -90,10 +97,4 @@ class AppointmentCancellation():
         reason = info["reason"]
         return Reason(reason).value
 
-    @staticmethod
-    def get_date_signature(input_file):
-        my_parser = CancellationsJsonParser(input_file)
-        info = my_parser.json_content
-        date_signature = info["date_signature"]
-        return date_signature
 
