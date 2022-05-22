@@ -3,4 +3,3 @@ from pathlib import Path
 JSON_FILES_PATH = str(Path.home()) + "/PycharmProjects/G80.2022.T11.FP/src/JsonFiles/"
 JSON_FILES_RF2_PATH = JSON_FILES_PATH + "/RF2/"
 JSON_FILES_RFF_PATH = JSON_FILES_PATH + "/RFF/"
-JSON_FILES_RFF_PATH = JSON_FILES_PATH + "/RFF/"
