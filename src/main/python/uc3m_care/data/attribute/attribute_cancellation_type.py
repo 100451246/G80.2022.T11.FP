@@ -1,3 +1,5 @@
+"""Class for the attribute cancellation_type"""
+
 from uc3m_care.data.attribute.attribute import Attribute
 
 
