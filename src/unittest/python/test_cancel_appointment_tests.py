@@ -1,18 +1,13 @@
+"""Unittests for cancel_appointment"""
 from unittest import TestCase
-import os
-import shutil
 from freezegun import freeze_time
 from uc3m_care import VaccineManager, FinalCancellationsJsonStore, VaccinationJsonStore
 from uc3m_care import VaccineManagementException
-from uc3m_care import JSON_FILES_PATH, JSON_FILES_RF2_PATH
+from uc3m_care import JSON_FILES_RF2_PATH
 from uc3m_care import AppointmentsJsonStore
 from uc3m_care import PatientsJsonStore
 from uc3m_care.cfg.vaccine_manager_config import JSON_FILES_RFF_PATH
 from uc3m_care.storage.temp_cancellations_json_store import TempCancellationsJsonStore
-
-date_param_ok = "2022-03-18"
-date_param_expired = "2022-03-09"
-
 
 
 class TestCancelAppointment(TestCase):
@@ -43,7 +38,7 @@ class TestCancelAppointment(TestCase):
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
         # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
 
         value = my_manager.cancel_appointment(file_test_cancel)
         self.assertEqual(value, "62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
@@ -75,7 +70,8 @@ class TestCancelAppointment(TestCase):
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
         # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
+
         value = my_manager.cancel_appointment(file_test_cancel)
         self.assertEqual(value, "62ca69e8aad4b24d8588117e58b3524ffe18dac510306a9f2c3aeb5039f3afa6")
         # check store_date
@@ -97,7 +93,6 @@ class TestCancelAppointment(TestCase):
         """Date_signature inválido"""
         file_test = JSON_FILES_RFF_PATH + "test_nok_date_signature2.json"
         my_manager = VaccineManager()
-
 
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test)
@@ -126,8 +121,7 @@ class TestCancelAppointment(TestCase):
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
 
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test)
@@ -140,7 +134,6 @@ class TestCancelAppointment(TestCase):
         file_test_new = JSON_FILES_RF2_PATH + "test_ok.json"
         my_manager = VaccineManager()
 
-        # first , prepare my test , remove store patient
         file_store = PatientsJsonStore()
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
@@ -156,8 +149,7 @@ class TestCancelAppointment(TestCase):
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
 
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test)
@@ -170,7 +162,6 @@ class TestCancelAppointment(TestCase):
         file_test_new = JSON_FILES_RF2_PATH + "test_ok.json"
         my_manager = VaccineManager()
 
-        # first , prepare my test , remove store patient
         file_store = PatientsJsonStore()
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
@@ -186,13 +177,11 @@ class TestCancelAppointment(TestCase):
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
 
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test)
         self.assertEqual(c_m.exception.message, "Reason is not valid")
-
 
     def test_cancel_appointment_nok_expired(self):
         """test cita antigua no cancelable"""
@@ -200,7 +189,6 @@ class TestCancelAppointment(TestCase):
         file_test_new = JSON_FILES_RF2_PATH + "test_ok_3.json"
         my_manager = VaccineManager()
 
-        # first , prepare my test , remove store patient
         file_store = PatientsJsonStore()
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
@@ -212,14 +200,12 @@ class TestCancelAppointment(TestCase):
         file_store_vaccines = VaccinationJsonStore()
         file_store_vaccines.delete_json_file()
 
-        # add a patient in the store
         freezer = freeze_time("2022-03-01")
         freezer.start()
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_expired)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-09")
 
         freezer = freeze_time("2022-03-28")
         freezer.start()
@@ -233,7 +219,6 @@ class TestCancelAppointment(TestCase):
         file_test_new = JSON_FILES_RF2_PATH + "test_ok_3.json"
         my_manager = VaccineManager()
 
-        # first , prepare my test , remove store patient
         file_store = PatientsJsonStore()
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
@@ -245,23 +230,21 @@ class TestCancelAppointment(TestCase):
         file_store_vaccines = VaccinationJsonStore()
         file_store_vaccines.delete_json_file()
 
-        # add a patient in the store
         freezer = freeze_time("2022-03-01")
         freezer.start()
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_expired)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-09")
         freezer = freeze_time("2022-03-09")
         freezer.start()
-        my_manager.vaccine_patient("9bc75318def04552d4c1a49fc430e022daf4bc4990e0875531523139305b7eaa")
+        my_manager.vaccine_patient("9bc75318def04552d4c1a49fc430e022da"+\
+                                   "f4bc4990e0875531523139305b7eaa")
         freezer = freeze_time("2022-03-08")
         freezer.start()
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test_cancel)
         self.assertEqual(c_m.exception.message, "Vacuna ya administrada")
-
 
     def test_cancel_appointment_nok_cancelled(self):
         """test nok, already cancelled"""
@@ -269,7 +252,6 @@ class TestCancelAppointment(TestCase):
         file_test_new = JSON_FILES_RF2_PATH + "test_ok.json"
         my_manager = VaccineManager()
 
-        # first , prepare my test , remove store patient
         file_store = PatientsJsonStore()
         file_store.delete_json_file()
         file_store_date = AppointmentsJsonStore()
@@ -283,16 +265,12 @@ class TestCancelAppointment(TestCase):
 
         freezer = freeze_time("2022-03-08")
         freezer.start()
-        # add a patient in the store
         my_manager.request_vaccination_id("78924cb0-075a-4099-a3ee-f3b562e805b9",
                                           "minombre tienelalongitudmaxima",
                                           "Regular", "+34123456789", "6")
-        # check the method
-        my_manager.get_vaccine_date(file_test_new, date_param_ok)
+        my_manager.get_vaccine_date(file_test_new, "2022-03-18")
 
-        value = my_manager.cancel_appointment(file_test_cancel)
+        my_manager.cancel_appointment(file_test_cancel)
         with self.assertRaises(VaccineManagementException) as c_m:
             my_manager.cancel_appointment(file_test_cancel)
         self.assertEqual(c_m.exception.message, "Cita ya cancelada")
-
-
